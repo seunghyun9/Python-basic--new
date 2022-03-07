@@ -1,0 +1,120 @@
+from hello.models import Quiz01Calculator, Quiz02Bmi, Quiz03Grade, Quiz05Dice, Quiz06RabdomGenerator, \
+    Quiz07RandomChoice, Quiz08Rps
+from hello.domains import Member
+from hello.quiz00 import Quiz00
+from hello.quiz10 import Quiz10
+from hello.quiz20 import Quiz20
+from hello.quiz30 import Quiz30
+from hello.quiz40 import Quiz40
+if __name__ == '__main__':
+    q0 = Quiz00()
+    q1 = Quiz10()
+    q2 = Quiz20()
+    q3 = Quiz30()
+    q4 = Quiz40()
+    while 1:
+        menu = input("00계산기 01Bmi 02주사위 03가위바위보 04윤년 05성적표 06멤버선택 07로또 08입출금 09구구단\n"
+                     "10버블 11삽입 12선택 13퀵 14병합 15매직 16지그재그 17소수 18골프 19예약\n"
+                     "20리스트 21튜플 22딕셔너리 23 24 25 26 27 28 29\n"
+                     "30 31 32 33 34 35 36 37 38 39")
+        if menu == '00':q0.quiz00calculator()
+        elif menu == '01':q0.quiz01bmi()
+        elif menu == '02':q0.quiz02dice()
+        elif menu == '03':q0.quiz03rps()
+        elif menu == '04':q0.quiz04leap()
+        elif menu == '05':q0.quiz05grade()
+        elif menu == '06':q0.quiz06memberChoice()
+        elif menu == '07':q0.quiz07lotto()
+        elif menu == '08':q0.quiz08bank()
+        elif menu == '09':q0.quiz09gugudan()
+        elif menu == '10':q1.quiz10bubble()
+        elif menu == '11':q1.quiz11insertion()
+        elif menu == '12':q1.quiz12selection()
+        elif menu == '13':q1.quiz13quick()
+        elif menu == '14':q1.quiz14merge()
+        elif menu == '15':q1.quiz15magic()
+        elif menu == '16':q1.quiz16zigzag()
+        elif menu == '17':q1.quiz17prime()
+        elif menu == '18':q1.quiz18golf()
+        elif menu == '19':q1.quiz19booking()
+        elif menu == '20':q2.quiz20list()
+        elif menu == '21':q2.quiz21tuple()
+        elif menu == '22':q2.quiz22dict()
+        elif menu == '23':q2.quiz23listcom()
+        elif menu == '24':q2.quiz24zip()
+        elif menu == '25':q2.quiz25dictcom()
+        elif menu == '26':q2.quiz26map()
+        elif menu == '27':q2.quiz27()
+        elif menu == '28':q2.quiz28()
+        elif menu == '29':q2.quiz29()
+        elif menu == '30':q2.quiz30()
+        elif menu == '31':q2.quiz31()
+        elif menu == '32':q2.quiz32()
+        elif menu == '33':q2.quiz33()
+        elif menu == '34':q2.quiz34()
+        elif menu == '35':q2.quiz35()
+        elif menu == '36':q2.quiz36()
+        elif menu == '37':q2.quiz37()
+        elif menu == '38':q2.quiz38()
+        elif menu == '39':q2.quiz39()
+        elif menu == '40':q4.quiz40()
+        elif menu == '41':q4.quiz41()
+        elif menu == '42':q4.quiz42()
+        elif menu == '43':q4.quiz43()
+        elif menu == '44':q4.quiz44()
+        elif menu == '45':q4.quiz45()
+        elif menu == '46':q4.quiz46()
+        elif menu == '47':q4.quiz47()
+        elif menu == '48':q4.quiz48()
+        elif menu == '49':q4.quiz49()
+        else:break
+
+'''
+     while 1:
+        menu = input("00계산기 01Bmi 02주사위 03가위바위보 04윤년 05성적표 06멤버선택 07로또 08입출금 09구구단\n"
+                     "10버블 11삽입 12선택 13퀵 14병합 15매직 16지그재그 17소수 18골프 19예약\n"
+                     "20리스트 21튜플 22딕셔너리 23 24 25 26 27 28 29\n"
+                     "30 31 32 33 34 35 36 37 38 39")
+        if menu == '00':  # 계산기
+            calc = Quiz01Calculator(int(input('첫번째 수')), int(input('1.더하기 2.빼기 3.곱하기 4.나누기')),
+                                    int(input('두번째 수')))
+            print(f'{calc.calc()}')
+
+        elif menu == '01':  # BMI
+            member = Member()
+            bmi = Quiz02Bmi()
+            member.height = float(input('키입력'))
+            member.weight = float(input('몸무게 입력'))
+            res = bmi.getbmi(member)
+            print(f'{res}')
+
+        elif menu == '02':  # 다이스
+            q5 = Quiz05Dice()
+            print(f'{q5.ran()}')
+        elif menu == '03':
+            q8 = Quiz08Rps(int(input('1.가위 2.바위 3.보 숫자입력')))
+            print(f'{q8.game()}')
+        elif menu == '04': q0.quiz04leap()
+
+        elif menu == '05':  # 성적표
+            for i in ['김유신', '이순신', '강감찬']:
+                print(i)
+            gra = Quiz03Grade(int(input('국어점수 입력')),
+                              int(input('영어점수 입력')), int(input('수학점수 입력')))
+            print(f'국어:{gra.kor} 영어:{gra.eng} 수학:{gra.math}\n')
+            print(f'{gra.res()}')
+
+        elif menu == '06':  # 원하는 범위 정수에서 랜덤값 1개 추출
+            q6 = Quiz06RabdomGenerator(int(input('첫번째 수')), int(input('두번째 수')))
+            q6.pick()
+      
+
+        elif menu == 7:  # 803호에서 랜덤으로 1명 이름 추출
+            q7 = Quiz07RandomChoice()
+            print(f'{q7.chooseMember()}')
+
+
+
+        else:
+            print('잘못된 숫자 입력')
+'''
