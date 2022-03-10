@@ -3,6 +3,7 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import pandas as pd
 
 
 class Quiz20:
@@ -78,21 +79,79 @@ class Quiz20:
         print(a2)
         return None
 
-    def quiz24zip(self) -> str:
+    def quiz24zip(self) -> {}:
         url ='https://music.bugs.co.kr/chart/track/realtime/total'
         html_doc = urlopen(url)
         soup = BeautifulSoup(html_doc, 'lxml')#html.parser vs lxml(이름임)
         #print(soup.prettify())
+        #print(Quiz20.found(soup, 'artist'))
+            # print(''.join(i for i in [i for i in self.found(soup, j)]))
+        # a = [i for i in self.found(soup, 'artist')]
+        # a = [i for i in self.found
+        # (soup, 'title')]
+        cls_names = ['artist', 'title']
+        a = [i for i in cls_names]
+        ls1 = self.found(soup, 'title')
+        ls2 = self.found(soup, 'artist')
+        # self.dict1(ls1, ls2)
+        # self.dict2(ls1, ls2)
+        dict = {}
+        for i, j in zip(ls1, ls2):
+            dict[i] = j
+        print(dict)
+        return dict
+
+        '''
         artists = soup.find_all('p', {'class':'artist'})
-        artists = [i.get_text() for i in artists]
+        artists = [i.get_text() for i in find]
         # print(type(artists))
         print(''.join(i  for i in artists))
+        
+        titles = soup.find_all('p', {'class': 'title'})
+        titles = [i.get_text() for i in titles]
+        print(''.join(i for i in titles))
+        '''
         ''' 
          for i in range(3):
             print(artists[i].text.strip())
-      
         '''
-        return None
+
+    @staticmethod
+    def dict2(ls1, ls2) -> None:
+        dict = {}
+        for i, j in enumerate(ls1):
+            dict[j] = ls2[i]
+        print(dict)
+
+    @staticmethod
+    def dict1(ls1, ls2) -> None:
+        dict = {}
+        for i in range(0, len(ls1)):
+            #print(type(f'타입: {ls1[i]}'))
+            dict[ls1[i]] = ls2[i] #키값과 벨류값을 출력함 키값:밸류값 << 출력
+        print(dict)
+
+
+    def print_music_list(self, soup) -> None:
+        artists = soup.find_all('p', {'class': 'artist'})
+        artists = [i.get_text() for i in artists]
+        print(''.join(i  for i in artists))
+        titles = soup.find_all('p', {'class': 'title'})
+        titles = [i.get_text() for i in titles]
+        print(''.join(i for i in titles))
+
+    def find_rank(self,soup):
+          for i, j in enumerate(['artist', 'title']):
+            for i, j in enumerate(self.found(soup,j)):
+                 print(f'{i}위 :{j}')
+            print('*' * 100)
+
+    @staticmethod
+    def found(soup, cls_nm) -> []:
+        find = soup.find_all('p', {'class': cls_nm})
+        return [i.get_text() for i in find]
+        # print(type(artists))
+
 
     def quiz25dictcom(self) -> str: return None
 
@@ -108,7 +167,21 @@ class Quiz20:
         # print(type(artists))
         print(''.join(i for i in titles))
         return None
+        '''
+        a= [i if i==0 or i==0 else i for i in range()] #수열
+        b= [i if i ==0 or i==0 else i for i in[]]
+        c= [(i,j) for i ,j in enumerate([])]
+        d= = ''.join(i for i in[])
+        '''
 
-    def quiz28(self) -> str: return None
+    def quiz28dataframe(self) -> None:
+        dict = self.quiz24zip()
+        df = pd.DataFrame.from_dict(dict, orient = 'index') #내부적으로 엑셀시트형식으로 만듬
+        print(df)
+        df.to_csv('./save/bugs.csv', sep=',', na_rep='NaN') #sep = 구분값 , na_rep=비어있으면공백을둬라
+
+
+        return None
 
     def quiz29(self) -> str: return None
+

@@ -215,6 +215,7 @@ class Account(object):
         return "".join(ls) # " "=문자열(객체) join=문자열결합
         '''
         return ''.join('-' if i == 3 or i == 6 else str(myRandom(1, 10)) for i in range(13))
+       # return ''.join(i if i ==3 or i==6
 
     @staticmethod
     def find_account(ls, account_number):
@@ -225,10 +226,12 @@ class Account(object):
         '''
         for i, j in enumerate(ls):
             if j.account_number == account_number:
-                print(ls[i].to_string())
+                print(ls[i].to_string())  
 
         return ''.join([ j.to_string() if j.account_number == account_number else '찾는 계좌 아님'  for i, j in enumerate(ls)])
         '''
+
+        return ''.join([i if i==60 else i==30 for i in range(3)])
 
     @staticmethod
     def del_account(ls, account_number):
