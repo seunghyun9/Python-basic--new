@@ -131,7 +131,6 @@ class Quiz20:
             dict[ls1[i]] = ls2[i] #키값과 벨류값을 출력함 키값:밸류값 << 출력
         print(dict)
 
-
     def print_music_list(self, soup) -> None:
         artists = soup.find_all('p', {'class': 'artist'})
         artists = [i.get_text() for i in artists]
@@ -157,16 +156,41 @@ class Quiz20:
 
     def quiz26map(self) -> str: return None
 
-    def quiz27melon(self) -> str:
+    def quiz27melon(self) -> {}:
         headers = {'User-Agent': 'Mozilla/5.0'}
         url = 'https://www.melon.com/chart/index.htm?dayTime=2022030816'
         req = urllib.request.Request(url, headers=headers)
         soup = BeautifulSoup(urlopen(req).read(),'lxml')
+        cls_name2=['checkEllipsis','ellipsis rank01']
+        a2 = [i for i in cls_name2]
+        '''
+        artists = soup.find_all('span', {'class': 'checkEllipsis'})
         titles = soup.find_all('div', {'class':'ellipsis rank01'})
         titles = [i.get_text() for i in titles]
-        # print(type(artists))
+        artists = [i.get_text() for i in artists]
+         #print(type(artists))
         print(''.join(i for i in titles))
-        return None
+        print(''.join(i for i in artists))
+        '''
+        ls3 = self.found2(soup, 'checkEllipsis')
+        ls4 = self.found3(soup, 'ellipsis rank01')
+        dict2 = {}
+        for i, j in zip(ls3, ls4):
+            dict2[i] = j
+        print(dict2)
+        return dict2
+
+    @staticmethod
+    def found2(soup, cls_nm) -> []:
+        find = soup.find_all('span', {'class': cls_nm})
+        return [i.get_text() for i in find]
+
+    @staticmethod
+    def found3(soup, cls_nm) -> []:
+        find = soup.find_all('div', {'class': cls_nm})
+        return [i.get_text() for i in find]
+
+
         '''
         a= [i if i==0 or i==0 else i for i in range()] #수열
         b= [i if i ==0 or i==0 else i for i in[]]
@@ -174,12 +198,12 @@ class Quiz20:
         d= = ''.join(i for i in[])
         '''
 
+
     def quiz28dataframe(self) -> None:
         dict = self.quiz24zip()
-        df = pd.DataFrame.from_dict(dict, orient = 'index') #내부적으로 엑셀시트형식으로 만듬
+        df = pd.DataFrame.from_dict(dict, orient='index') #내부적으로 엑셀시트형식으로 만듬
         print(df)
         df.to_csv('./save/bugs.csv', sep=',', na_rep='NaN') #sep = 구분값 , na_rep=비어있으면공백을둬라
-
 
         return None
 
