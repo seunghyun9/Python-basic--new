@@ -139,8 +139,8 @@ class Quiz00:
             return 'D등급'
         else:
             return 'F등급'
-
-    def quiz06memberChoice(self):
+    @staticmethod
+    def quiz06memberChoice():
         return members()[myRandom(0, 23)]
 
     def quiz07lotto(self):
