@@ -244,9 +244,17 @@ class Quiz20:
 
         e1 = []
         e2 = []
+        e3 = ['1', '2']
+        e5 = [e1],[e2]
         [e1.append(i) if i % 2 != 0 else e2.append(i) for i in range(1, 7)]
+        # e5 = {i: j for i, j in zip(e3, e1)
         d3 = {"1": e1, "2": e2}
-        df3 = pd.DataFrame.from_dict(d3, orient='index', columns=columns1)
+        df3 = pd.DataFrame.from_dict(zip(e3,e5), orient='index', columns=columns1)
 
         print(df3)
         return None
+
+    @staticmethod
+    def askicode(start,end):
+        columns = [chr(i) for i in range(start, end)]
+        return columns
