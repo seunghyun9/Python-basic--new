@@ -117,6 +117,7 @@ class Quiz20:
         titles = [i.get_text() for i in titles]
         print(''.join(i for i in titles))
         '''
+
         ''' 
          for i in range(3):
             print(artists[i].text.strip())
@@ -230,26 +231,25 @@ class Quiz20:
         return None
 
     def quiz29_pandas(self) -> object:  # 데이터 프레임은 오브젝트로 바꿔야함
+        d = {'a': [1, 2], 'b': [3, 4], 'c': [5, 6]}
+        df1 = pd.DataFrame(d, index=[1, 2])
         '''
         다음결과 출력
             a   b   c
         1   1   2   3
         2   2   4   6
         '''
-        d = {'a': [1, 2], 'b': [3, 4], 'c': [5, 6]}
-        df1 = pd.DataFrame(d, index=[1, 2])
         d2 = {"1": [1, 3, 5], "2": [2, 4, 6]}
         df2 = pd.DataFrame.from_dict(d2, orient='index', columns=['a', 'b', 'c'])
         columns1 = [chr(i) for i in range(97, 100)] # ['a','b','c']
-
         e1 = []
         e2 = []
-        e3 = ['1', '2']
-        e5 = [e1],[e2]
-        [e1.append(i) if i % 2 != 0 else e2.append(i) for i in range(1, 7)]
-        # e5 = {i: j for i, j in zip(e3, e1)
-        d3 = {"1": e1, "2": e2}
-        df3 = pd.DataFrame.from_dict(zip(e3,e5), orient='index', columns=columns1)
+        e = [e1.append(i) if i % 2 != 0 else e2.append(i) for i in range(1, 7)]
+        e3 = ["1","2"]
+        e5 = [e1,e2]
+        d3 = {i:j for i,j in zip(e3,e5)}
+        df3 = pd.DataFrame.from_dict(d3, orient='index', columns=columns1)
+        df4 = pd.DataFrame.from_dict(d2, orient="index", columns=['A', 'B', 'C'])
 
         print(df3)
         return None

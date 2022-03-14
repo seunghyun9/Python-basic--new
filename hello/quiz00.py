@@ -197,7 +197,7 @@ class Account(object):
         self.name = Quiz00().quiz06memberChoice() if name is None else name
         self.money = myRandom(100, 1000) if money is None else money
         self.create_account_number = self.create_account_number() if account_number is None else account_number
-           '''
+        '''
 
     def to_string(self):
         return f'은행 : {self.BANK_NAME}, ' \
