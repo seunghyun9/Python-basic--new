@@ -5,7 +5,7 @@ from hello import Quiz20
 from hello.domains import myRandom, members
 import random
 import string
-from titanic.models import Model
+from context.models import Model
 
 class Quiz30:
     def quiz30_df_4_by_3(self) -> None:
@@ -39,7 +39,7 @@ class Quiz30:
         ic(df2)
         return None
 
-    def quiz31_rand_2_by_3(self) -> str:
+    def quiz31_rand_2_by_3(self) -> object:
         # 1
         # data = Quiz30.random_cutter(10, 100, 6, 3)
         # df = pd.DataFrame(data, index=range(0, 2), columns=range(0, 3))
@@ -74,17 +74,17 @@ class Quiz30:
                             PZOTP  94  78  79  96
                             GOJKU  62  17  75  49
         '''
-        date = np.random.randint(0, 100, (10, 4))  # 자체가 리스트화됨
+        scores = np.random.randint(0, 100, (10, 4))  # 자체가 리스트화됨
         idx = [self.id(5) for i in range(10)]
-        col1 = ['국어', '영어', '수학', '사회']
-        df1 = pd.DataFrame(date, index=idx, columns=col1)
+        subjects = ['국어', '영어', '수학', '사회']
+        df1 = pd.DataFrame(scores, index=idx, columns=subjects)
         print('-------------------------------------')
         data2 = np.random.randint(0, 100, (10, 4))
         idx2 = [self.id(5) for i in range(10)]
-        df2 = pd.DataFrame.from_dict(dict(zip(idx2, data2)), orient="index", columns=col1)
+        df2 = pd.DataFrame.from_dict(dict(zip(idx2, data2)), orient="index", columns=subjects)
         print('-------------------------------------')
         zop = {i: j for i, j in zip(idx2, data2)}
-        df3 = pd.DataFrame.from_dict(zop, orient="index", columns=col1)
+        df3 = pd.DataFrame.from_dict(zop, orient="index", columns=subjects)
 
         ic(df1)
         ic(df2)
@@ -99,17 +99,31 @@ class Quiz30:
         d2 = [dict(zip(['a', 'b', 'c', 'd'], np.random.randint(1, 100, 4))) for i in range(3)]
         df = pd.DataFrame(d2)
         df2 = self.createDf(keys=['a', 'b', 'c', 'd'], vals=np.random.randint(1, 100, 4), len=3)
-
-        df3 = pd.DataFrame()
-
-        subj = ['자바', '파이썬', '자바스크립트', 'SQL']
-        stud = members()
-        df4 = pd.DataFrame(np.random.randint(1, 100, (24, 4)), index=members(), columns=subj)
+        students = members()
+        scores = np.random.randint(1, 100, (24,4))
+        subjects = ['자바', '파이썬', '자바스크립트', 'SQL']
+        student_scores ={student:score for student,score in zip(students,scores)}
+        df3 = pd.DataFrame.from_dict(student_scores,orient="index",columns=subjects)
+        df4 = pd.DataFrame(np.random.randint(1, 100, (24, 4)), index=members(), columns=subjects)
         #ic(df4)
-        # df4.to_csv('./save/grade.csv', sep=',', na_rep='NaN')
+        # model.save_model(fname='grade.csv', dframe=students_scores_df)
         model = Model()
-        grade_df = model.new_model('grade.csv')
-        ic(grade_df)
+        grade_df = model.new_model(fname='grade.csv')
+        #ic(grade_df)
+        print('Q1. 파이썬의 점수만 출력하시오')
+        python_scores = grade_df.loc[:,'파이썬']
+        ic(type(python_scores))
+        ic(python_scores)
+        print('Q2. 조현국의 점수만 출력하시오')
+        cho_scores = grade_df.loc['조현국']
+        ic(type(cho_scores))
+        ic(cho_scores)
+        print('Q3. 조현국의 과목별 점수만 출력하시오')
+        cho_subjects_scores = grade_df.loc[['조현국']]
+        ic(type(cho_subjects_scores))
+        ic(cho_subjects_scores)
+
+
         return None
 
     @staticmethod
