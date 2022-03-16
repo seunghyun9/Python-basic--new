@@ -17,11 +17,11 @@ class TitanicTemplates(object):
         self.dataset = Dataset()
         self.model = Model()
         self.entity = self.model.new_model(fname)
-        df = self.entity
-        ic(f'트레인의 타입: {type(df)}')
-        ic(f'트레인의 컬럼: {df.train.columns}')
-        ic(f'트레인의 상위5행: {df.train.head}')
-        ic(f'트레인의 하위5행: {df.train.tail}')
+        this = self.entity
+        ic(f'트레인의 타입: {type(this)}')
+        ic(f'트레인의 컬럼: {this.columns}')
+        ic(f'트레인의 상위5행: {this.head}')
+        ic(f'트레인의 하위5행: {this.tail}')
 
     def visualize(self)->None:
         this = self.entity

@@ -9,7 +9,7 @@ if __name__ == '__main__':
         menu = input('1.템플릿 2.전처리')
         if menu == '1':
             print(' #### 1. 템플릿 #### ')
-            templates = TitanicTemplates(train_fname='train.csv')
+            templates = TitanicTemplates(fname='train.csv')
             # view.preprocess('train.csv','test.csv')
             break
         elif menu == '2':

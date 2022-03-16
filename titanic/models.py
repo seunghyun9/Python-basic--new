@@ -9,6 +9,9 @@ class TitanicModel(object):
         self.model = Model()
         self.train = self.model.new_model(train_fname)
         self.test = self.model.new_model(test_fname)
+        df = self.train
+        ic(f'트레인 컬럼 {df.columns}')
+        ic(f'트레인 헤드 {df.head()}')
         # self.preprocess(df=self.train)
         # id 추출
 
@@ -16,7 +19,7 @@ class TitanicModel(object):
         df = self.train
         ic(f'트레인 컬럼 {self.df.columns}')
         ic(f'트레인 헤드 {self.df.head()}')
-        ic(self.df)
+        ic(df)
         df = self.drop_feature(df)
         df = self.crate_train(df)
         df = self.create_label(df)
