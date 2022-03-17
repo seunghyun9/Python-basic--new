@@ -64,9 +64,13 @@ class TitanicModel(object):
         this.train = this.train.drop('Cabin', axis=1)
         this.train = this.train.drop('Ticket', axis=1)
         '''
+        [i.drop(j, axis=1, inplace=True) for i in [this.train, this.test] for j in feature]
+        '''
         a = [i for i in feature]
         this.train = this.train.drop(a, axis=1)
         this.test = this.test.drop(a, axis=1)
+        '''
+        
         '''
         self.sib_sp_garbage(df)
         self.parch_garbage(df)
