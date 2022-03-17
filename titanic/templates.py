@@ -29,9 +29,9 @@ class TitanicTemplates(object):
 
     def visualize(self)->None: #원데이터에 가공하는 것
         this = self.entity
-        self.draw_survived(this)
-        self.draw_pclass(this)
-        self.draw_sex(this)
+        #self.draw_survived(this)
+        #self.draw_pclass(this)
+        #self.draw_sex(this)
         self.draw_embarked(this)
 
     @staticmethod
