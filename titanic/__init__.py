@@ -10,6 +10,7 @@ if __name__ == '__main__':
         if menu == '1':
             print(' #### 1. 템플릿 #### ')
             templates = TitanicTemplates(fname='train.csv')
+            templates.visualize()
             # view.preprocess('train.csv','test.csv')
             break
         elif menu == '2':

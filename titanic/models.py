@@ -15,7 +15,7 @@ class TitanicModel(object):
         # self.preprocess(df=self.train)
         # id 추출
 
-    def preprocess(self):
+    def preprocess(self): # 데이터를 계속해서 가공(정제)한다.
         df = self.train
         ic(f'트레인 컬럼 {self.df.columns}')
         ic(f'트레인 헤드 {self.df.head()}')

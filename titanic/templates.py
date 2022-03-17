@@ -2,6 +2,10 @@ from icecream import ic
 from context.domains import Dataset
 from context.models import Model
 import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib import rc, font_manager
+
+rc('font', family = font_manager.FontProperties(fname='C:/Windows/Fonts/H2GTRE.ttf').get_name())
 
 '''
 데이터 시각화
@@ -23,17 +27,21 @@ class TitanicTemplates(object):
         ic(f'트레인의 상위5행: {this.head}')
         ic(f'트레인의 하위5행: {this.tail}')
 
-    def visualize(self)->None:
+    def visualize(self)->None: #원데이터에 가공하는 것
         this = self.entity
         self.draw_survived(this)
-        self.draw_pclass(this)
-        self.draw_sex(this)
-        self.draw_embarked(this)
+        #self.draw_pclass(this)
+        #self.draw_sex(this)
+        #self.draw_embarked(this)
 
     @staticmethod
     def draw_survived(this) ->None:
-        f, ax = plt.subplots(1, 2, figsize=(18, 8))
-        this['Survived']
+        f, ax =plt.subplots(1, 2, figsize=(18, 8))  # nrows=1, ncols=2,figisize 18inch 8inch
+        this['Survived'].value_counts().plot.pie(explode=[0,0.1], autopct='%1.1f%%',ax=ax[0], shadow=True)
+        ax[0].set_title('0.사망자 vs 1.생존자')
+        ax[0].set_ylabel('')
+        ax[1].set_title('0.사망자 vs 1.생존자')
+        sns.countplot('Survived', data=this, ax=ax[1])
         plt.show()
 
     @staticmethod
