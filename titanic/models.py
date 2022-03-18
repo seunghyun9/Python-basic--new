@@ -10,6 +10,7 @@ class TitanicModel(object):
     def preprocess(self, train_fname, test_fname): # 데이터를 계속해서 가공(정제)한다.
         this = self.dataset
         that = self.model
+        feature = [ 'PassengerId','Survived','Pclass','Name','Sex','Age','SibSp','Parch','Ticket','Fare','Cabin','Embarked']
         this.train = that.new_dframe(train_fname)
         this.test = that.new_dframe(test_fname)
         this.id = this.test['PassengerId'] # 검증을 위해서 id와 label을 사용
@@ -17,6 +18,7 @@ class TitanicModel(object):
         # Entity에서 object로 전환
         this.train = this.train.drop('Survived', axis=1)#열방향은 숫자1로 표시
         this = self.drop_feature(this, 'Ticket', 'Parch', 'Cabin','SibSp')
+        # self.kwargs_sample(name='이순신') # kwargs예제
         '''
         this = self.create_train(this)
         this = self.create_label(this)
@@ -28,9 +30,10 @@ class TitanicModel(object):
         this = self.fare_ratio(this)
         '''
         self.print_this(this)
+        self.df_info(this)
         return this
-    @staticmethod
 
+    @staticmethod
     def print_this(this):
         print('*'*100)
         ic(f'1. Train 의 타입 : {type(this.train)}\n')
@@ -45,6 +48,11 @@ class TitanicModel(object):
         ic(f'10. id 의 상위 10개 : {this.id[:10]}\n')
         print('*' * 100)
 
+    @staticmethod
+    def df_info(this):
+        [ic(f'{i.info()}') for i in [this.train, this.test]]
+
+
     def create_this(self, dataset) -> object:
         this = dataset
         this.train = self.train
@@ -57,26 +65,29 @@ class TitanicModel(object):
         return this
 
     @staticmethod
-    def drop_feature(this, *feature) -> object:
+    def drop_feature(this, *feature) -> object: # *= All,몇개인지 몰라 모든 컬럼들은 들고 온다는 뜻
         '''
         this.train = this.train.drop('SibSp', axis=1)
         this.train = this.train.drop('Parch', axis=1)
         this.train = this.train.drop('Cabin', axis=1)
         this.train = this.train.drop('Ticket', axis=1)
         '''
+        ic(type(feature)) # 타입은 튜플(상수)
         [i.drop(j, axis=1, inplace=True) for i in [this.train, this.test] for j in feature]
+        # [i.drop(list(feature), axis=1, inplace=True) for i in [this.train, this.test]]
         '''
         a = [i for i in feature]
         this.train = this.train.drop(a, axis=1)
         this.test = this.test.drop(a, axis=1)
         '''
-        
+
         '''
         self.sib_sp_garbage(df)
         self.parch_garbage(df)
         self.ticket_garbage(df)
         self.cabin_garbage(df)
         '''
+
         return this
 
 
@@ -85,6 +96,14 @@ class TitanicModel(object):
     cate -> naminal(이름) vs oridnla(순서)
     Quan -> interval(상대적) vs ratio(기준점 존재,절대)
     '''
+    @staticmethod
+    def df_info(this):
+        [ic(f'{i.info()}') for i in [this.train, this.test]]
+
+    @staticmethod
+    def kwargs_sample(**kwargs) -> None:
+        ic(type(kwargs)) # ic| type(feature): <class 'tuple'>
+        {print(''.join(f'key:{i}, val:{j}')) for i, j in kwargs.items()} # key:name, val:이순신
 
     @staticmethod
     def pclass_ordinal(this) -> object:
