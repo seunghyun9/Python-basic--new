@@ -22,25 +22,17 @@ class TitanicModel(object):
         this.train = this.train.drop('Survived', axis=1)  # 열방향은 숫자1로 표시
         this = self.drop_feature(this, 'Ticket', 'Parch', 'Cabin', 'SibSp')
         # self.kwargs_sample(name='이순신') # kwargs 예제
-        this = self.extract_title_from_name(this) # Title을 뽑아냄
+        this = self.extract_title_from_name(this)  # Title을 뽑아냄
         title_mapping = self.remove_duplicate(this)
-        this = self.title_nominal(this, title_mapping) #mapping ex) 학교 = school(1) 자연어를 기계어로 변환
+        this = self.title_nominal(this, title_mapping)  # mapping ex) 학교 = school(1) 자연어를 기계어로 변환
         this = self.drop_feature(this, 'Name')
         this = self.sex_nominal(this)
         this = self.drop_feature(this, 'Sex')
         this = self.embarked_nominal(this)
         this = self.age_ratio(this)
         this = self.drop_feature(this, 'Age')
-
-        '''
-        this = self.create_train(this)
-        this = self.create_label(this)
-        this = self.sex_nominal(this)
-        this = self.age_ratio(this)
-        this = self.embarked_nominal(this)
-        this = self.pclass_ordinal(this)
         this = self.fare_ratio(this)
-        '''
+        this = self.drop_feature(this, 'Fare')
         self.print_this(this)
         self.df_info(this)
         return this
@@ -120,9 +112,9 @@ class TitanicModel(object):
 
     @staticmethod
     def name_nominal(this) -> object:  # 성씨(계급을 나타냄 ex.Mr,Rev)만 이용함
-        combine = [this.train, this.test] # this는 데이터셋 형식이다, 리스트형식으로 바꿔서 수정가능하게함
+        combine = [this.train, this.test]  # this는 데이터셋 형식이다, 리스트형식으로 바꿔서 수정가능하게함
         for dataset in combine:
-            dataset['Title'] = dataset.Name.str.extract('([A-Za-z]+)\.',expand=False)
+            dataset['Title'] = dataset.Name.str.extract('([A-Za-z]+)\.', expand=False)
             # ('[]')< 정규식으로 각 캐릭터를 뜻함 expands=False 뒤에 내용은 버리라는뜻
             ic(dataset['Title'])
         return this
@@ -151,19 +143,20 @@ class TitanicModel(object):
         Master
         Mrs
         '''
-        title_mapping = {'Mr': 1, 'Ms': 2, 'Mrs':3, 'Master':4, 'Royal':5, 'Rare': 6}
+        title_mapping = {'Mr': 1, 'Ms': 2, 'Mrs': 3, 'Master': 4, 'Royal': 5, 'Rare': 6}
         return title_mapping
 
     @staticmethod
     def title_nominal(this, title_mapping) -> object:
         for these in [this.train, this.test]:
             these['Title'] = these['Title'].replace(['Countess', 'Lady', 'Sir'], 'Royal')
-            these['Title'] = these['Title'].replace(['Capt','Col','Don','Dr','Major','Rev','Jonkheer','Dona','Mme'], 'Rare')
+            these['Title'] = these['Title'].replace(
+                ['Capt', 'Col', 'Don', 'Dr', 'Major', 'Rev', 'Jonkheer', 'Dona', 'Mme'], 'Rare')
             these['Title'] = these['Title'].replace(['Mlle'], 'Mr')
-            these['Title'] = these['Title'].replace(['Miss'], 'Ms') #replace 는 문자를 문자로 바꾼다
+            these['Title'] = these['Title'].replace(['Miss'], 'Ms')  # replace 는 문자를 문자로 바꾼다
             # Master 는 변화없음
             # Mrs 는 변화없음
-            these['Title'] = these['Title'].fillna(0) #fillna는 결측값은 0 으로 채운다는 뜻
+            these['Title'] = these['Title'].fillna(0)  # fillna는 결측값은 0 으로 채운다는 뜻
             these['Title'] = these['Title'].map(title_mapping)
         return this
 
@@ -172,33 +165,49 @@ class TitanicModel(object):
         gender_mapping = {'male': 0, 'female': 1}
         for these in [this.train, this.test]:
             these['Gender'] = these.Sex.str.extract('([A-Za-z]+)')
-            these['Gender'] = these['Gender'].map(gender_mapping) #.map 은 대신한다. 딕셔너리를 전달 하거나, 함수를 전달하여 다른 값으로 변경할 수 있다.
+            these['Gender'] = these['Gender'].map(
+                gender_mapping)  # .map 은 대신한다. 딕셔너리를 전달 하거나, 함수를 전달하여 다른 값으로 변경할 수 있다.
         return this
 
     @staticmethod
     def age_ratio(this) -> object:
         train = this.train
         test = this.test
-        age_mapping = {'Unknown':0 , 'Baby': 1, 'Child': 2, 'Teenager' : 3, 'Student': 4,
-                       'Young Adult': 5, 'Adult':6,  'Senior': 7}
-        train['Age'] = train['Age'].fillna(-0.5) # Unknown 범위를 -1 <Unknown <0으로 정했으니 그 안에 들어가야함
+        age_mapping = {'Unknown': 0, 'Baby': 1, 'Child': 2, 'Teenager': 3, 'Student': 4,
+                       'Young Adult': 5, 'Adult': 6, 'Senior': 7}
+        train['Age'] = train['Age'].fillna(-0.5)  # Unknown 범위를 -1 <Unknown <0으로 정했으니 그 안에 들어가야함
         test['Age'] = test['Age'].fillna(-0.5)
-        bins = [-1, 0, 5, 12, 18, 24, 35, 60, np.inf] #np.inf:특정 할 수 없는 값= 무한값
+        bins = [-1, 0, 5, 12, 18, 24, 35, 60, np.inf]  # np.inf:특정 할 수 없는 값= 무한값
         labels = ['Unknown', 'Baby', 'Child', 'Teenager', 'Student', 'Young Adult', 'Adult', 'Senior']
         for these in train, test:
             # pd.cut() 을 사용하시오. 다른 곳은 고치지 말고 다음 두 줄만 코딩하시오 ,pd.cut = 데이터 값들을 특정 구간에 따라서 범주화 할 때, 사용
-            these['AgeGroup'] = pd.cut(these['Age'], bins, right=True, labels=labels)# right=True 입력하면 60 < Senior <= np.inf 설정된다.
+            these['AgeGroup'] = pd.cut(these['Age'], bins, right=True,
+                                       labels=labels)  # right=True 입력하면 60 < Senior <= np.inf 설정된다.
             these['AgeGroup'] = these['AgeGroup'].map(age_mapping)
         return this
 
     @staticmethod
     def fare_ratio(this) -> object:
+        train = this.train
+        test = this.test
+        train['Fare'] = train['Fare'].fillna(-1)
+        test['Fare'] = test['Fare'].fillna(-1)
+        # bins = [-1, 8, 15, 31, np.inf]
+        labels = ['Premium', 'Sweet', 'Standard', 'Economy']
+        fare_mapping = {'Premium': 4, 'Sweet': 3, 'Standard': 2, 'Economy': 1}
+        for these in train, test:
+            these['FareBand'] = pd.qcut(these['Fare'], 4, labels=labels)
+            # pd.pcut을 사용하면 주어진 숫자만큼 균등하게 범위를 나눠준다.
+            these['FareBand'] = these['FareBand'].map(fare_mapping)
+
+        # print(f'qcut 으로 bins 값 설정 {this.train["FareBand"].head()}')
+
         return this
 
     @staticmethod
     def embarked_nominal(this) -> object:
-        embarked_mapping = {'S':1,'C':2,'Q':3}
-        #this.train = this.train.fillna({'Embarked':'S'}) # 통상적으로 선착지가 null값으로 판단된 사람은 S로대체한다
+        embarked_mapping = {'S': 1, 'C': 2, 'Q': 3}
+        # this.train = this.train.fillna({'Embarked':'S'}) # 통상적으로 선착지가 null값으로 판단된 사람은 S로대체한다
         for these in [this.train, this.test]:
             these['Embarked'] = these['Embarked'].map(embarked_mapping)
             these['Embarked'] = these['Embarked'].fillna(1)
