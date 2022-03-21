@@ -3,6 +3,9 @@ import pandas as pd
 from icecream import ic
 from context.models import Model
 from context.domains import Dataset
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
 
 
 class TitanicModel(object):
@@ -33,8 +36,11 @@ class TitanicModel(object):
         this = self.drop_feature(this, 'Age')
         this = self.fare_ratio(this)
         this = self.drop_feature(this, 'Fare')
-        self.print_this(this)
-        self.df_info(this)
+        #self.print_this(this)
+        #self.df_info(this)
+        k_fold = self.create_k_fold()
+        accuracy = self.get_accuracy(this, k_fold)
+        ic(accuracy)
         return this
 
     @staticmethod
@@ -188,17 +194,15 @@ class TitanicModel(object):
 
     @staticmethod
     def fare_ratio(this) -> object:
-        train = this.train
-        test = this.test
-        train['Fare'] = train['Fare'].fillna(-1)
-        test['Fare'] = test['Fare'].fillna(-1)
+        this.test['Fare'] = this.test['Fare'].fillna(-1)
         # bins = [-1, 8, 15, 31, np.inf]
         labels = ['Premium', 'Sweet', 'Standard', 'Economy']
         fare_mapping = {'Premium': 4, 'Sweet': 3, 'Standard': 2, 'Economy': 1}
-        for these in train, test:
+        for these in [this.train, this.test]:
             these['FareBand'] = pd.qcut(these['Fare'], 4, labels=labels)
             # pd.pcut을 사용하면 주어진 숫자만큼 균등하게 범위를 나눠준다.
             these['FareBand'] = these['FareBand'].map(fare_mapping)
+
 
         # print(f'qcut 으로 bins 값 설정 {this.train["FareBand"].head()}')
 
@@ -212,3 +216,17 @@ class TitanicModel(object):
             these['Embarked'] = these['Embarked'].map(embarked_mapping)
             these['Embarked'] = these['Embarked'].fillna(1)
         return this
+
+    @staticmethod
+    def create_k_fold() -> object:
+        return KFold(n_splits=10, shuffle=True, random_state=0)
+
+    @staticmethod
+    def get_accuracy(this, k_fold):
+        score = cross_val_score(RandomForestClassifier(), this.train, this.label,
+                                cv=k_fold, n_jobs=1, scoring='accuracy')
+    # n_jobs 가동 횟수
+        return round(np.mean(score)*100, 2)
+    # round 는 반올림 2는 소숫점 2자리까지
+
+
