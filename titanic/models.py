@@ -43,6 +43,23 @@ class TitanicModel(object):
         ic(accuracy)
         return this
 
+
+    def learning(self, train_fname, test_fname):
+        this = self.preprocess(train_fname, test_fname)
+        print('*'*100)
+        self.df_info(this)
+        k_fold = self.create_k_fold()
+        ic(f'사이킷런 알고리즘 정확도: {self.get_accuracy(this, k_fold)}')
+        self.submit(this)
+
+
+    @staticmethod
+    def submit(this):
+        clf = RandomForestClassifier()
+        clf.fit(this.train, this.label)
+        prediction = clf.predict(this.test)
+        pd.DataFrame({'PassengerId': this.id, 'Survived': prediction}).to_csv('./save/submission.csv', index=False)
+
     @staticmethod
     def print_this(this):
         print('*' * 100)
@@ -197,7 +214,7 @@ class TitanicModel(object):
         this.test['Fare'] = this.test['Fare'].fillna(-1)
         # bins = [-1, 8, 15, 31, np.inf]
         labels = ['Premium', 'Sweet', 'Standard', 'Economy']
-        fare_mapping = {'Premium': 4, 'Sweet': 3, 'Standard': 2, 'Economy': 1}
+        fare_mapping = {'Premium': 4, 'Sweet': 3, 'Standard': 2, 'Economy': 1, }
         for these in [this.train, this.test]:
             these['FareBand'] = pd.qcut(these['Fare'], 4, labels=labels)
             # pd.pcut을 사용하면 주어진 숫자만큼 균등하게 범위를 나눠준다.
@@ -228,5 +245,8 @@ class TitanicModel(object):
     # n_jobs 가동 횟수
         return round(np.mean(score)*100, 2)
     # round 는 반올림 2는 소숫점 2자리까지
+
+
+
 
 
