@@ -6,7 +6,9 @@ from abc import *
 
 import pandas as pd
 import googlemaps
-
+from typing import TypeVar
+PandasDataFrame = TypeVar('pandas.core.frame.DataFrame')
+GooglemapsClient = TypeVar('googlemaps.Client')
 
 @dataclass
 class Dataset:
@@ -140,14 +142,14 @@ class Reader(ReaderBase):
     def new_file(self, file) -> str:
         return file.context + file.fname
 
-    def csv(self, file) -> object:
-        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',')
+    def csv(self, path:str) -> PandasDataFrame:
+        return pd.read_csv(f'{self.new_file(path)}.csv', encoding='UTF-8', thousands=',')
 
-    def xls(self, file, header, cols) -> object:
-        return pd.read_excel(f'{self.new_file(file)}.xls', header=header, usecols=cols)
+    def xls(self, path:str, header, cols) -> object:
+        return pd.read_excel(f'{self.new_file(path)}.xls', header=header, usecols=cols)
 
-    def json(self, file) -> object:
-        return pd.read_json(f'{self.new_file(file)}.json', encoding='UTF-8')
+    def json(self, path:str) -> object:
+        return pd.read_json(f'{self.new_file(path)}.json', encoding='UTF-8')
 
     def gmaps(self)-> googlemaps.Client :
         return googlemaps.Client(key='')
