@@ -12,6 +12,28 @@ class Solution(Reader):
         self.crime_columns = ['살인', '강도', '강간', '절도', '폭력']
         self.file.context = './data/'
 
+
+    def hook(self):
+        def print_menu():
+            print('0. Exit')
+            print('1. crime_in_seoul.csv, 구글맵 API 를 이용해서 서울시내 경찰서 주소목록파일을 작성하시오.')
+            print('2. us-states.json, us_unemployment.csv 를 이용해서 미국 실업률 지도를 작성하시오.')
+            print('3. 삭제')
+            return input('메뉴 선택 \n')
+
+        while 1:
+            menu = print_menu()
+            if menu == '0':
+                break
+            if menu == '1':
+                self.save_police_pos() # Solution..save_police_pos()는 틀린것
+            if menu == '2':
+                self.draw_crime_mpa()
+            if menu == '3':
+                pass
+            elif menu == '0':
+                break
+
     def save_police_pos(self):  # 메서드
         file = self.file
         file.fname = 'crime_in_seoul'
@@ -112,7 +134,7 @@ class Solution(Reader):
         bins = list(unemployment["Unemployment"].quantile([0, 0.25, 0.5, 0.75, 1]))
         m = folium.Map(location=[48, -102], zoom_start=5)
         folium.Choropleth(
-            geo_data=states, # dataframe 아님
+            geo_data=states,  # dataframe 아님
             name="choropleth",
             data=unemployment,
             columns=["State", "Unemployment"],
@@ -136,5 +158,4 @@ class Solution(Reader):
 if __name__ == '__main__':
     # Solution().save_police_pos()
     # Solution().save_cctv_pos()
-      Solution().folium_test()
-
+    Solution().hook()
