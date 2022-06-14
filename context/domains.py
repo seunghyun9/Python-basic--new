@@ -1,5 +1,6 @@
 # context, fname, train, test, id , label
 # class Dataset:
+import json
 from abc import ABC
 from dataclasses import dataclass
 from abc import *
@@ -7,8 +8,10 @@ from abc import *
 import pandas as pd
 import googlemaps
 from typing import TypeVar
+
 PandasDataFrame = TypeVar('pandas.core.frame.DataFrame')
 GooglemapsClient = TypeVar('googlemaps.Client')
+
 
 @dataclass
 class Dataset:
@@ -139,19 +142,30 @@ class Reader(ReaderBase):  # Reader가 ReaderBase의 자식이라는 뜻이다.
 
 
 class Reader(ReaderBase):
-    def new_file(self, file) -> str:
+    def new_file(self, file)-> str:
         return file.context + file.fname
+    # file.context = './data/'
+    # file.fname = 'cctv_in_seoul'
+    # file 객체에 있는 context와 fname이 필요하다.
 
-    def csv(self, path:str) -> PandasDataFrame:
-        return pd.read_csv(f'{self.new_file(path)}.csv', encoding='UTF-8', thousands=',')
+    def csv(self, path: str)-> PandasDataFrame:
+        o = pd.read_csv(f'{self.new_file(path)}.csv', encoding='UTF-8', thousands=',')
+        print(f'type: {type(o)}')
+        return o
 
-    def xls(self, path:str, header, cols) -> object:
-        return pd.read_excel(f'{self.new_file(path)}.xls', header=header, usecols=cols)
 
-    def json(self, path:str) -> object:
+    def xls(self, path: str, header: str, cols: str, skiprows)-> PandasDataFrame:
+        return pd.read_excel(f'{self.new_file(path)}.xls', header=header, usecols=cols, skiprows=skiprows)
+
+    def json(self, path: str)-> PandasDataFrame:
         return pd.read_json(f'{self.new_file(path)}.json', encoding='UTF-8')
 
-    def gmaps(self)-> googlemaps.Client :
+    def map_json(self, path: str) -> object:
+        return json.load(open(f'{self.new_file(path)}.json', encoding='UTF-8'))
+
+
+    @staticmethod
+    def gmaps() -> GooglemapsClient:
         return googlemaps.Client(key='')
 
 
