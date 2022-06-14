@@ -112,7 +112,7 @@ class Solution(Reader):
     def remove_stopword(self):
         tokens = self.tokenization()
         stopword = self.read_stopword()
-        texts = [tokens.lower() for tokens in texts if ]
+        texts = []
         print(texts)
 
     def token_embedding(self):
