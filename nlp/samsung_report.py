@@ -39,6 +39,7 @@ import nltk
 
 '''
 
+
 class Solution(Reader):
     def __init__(self):
         self.okt = Okt()
@@ -48,13 +49,9 @@ class Solution(Reader):
     def hook(self):
         def print_menu():
             print('0. Exit')
-            print('1. Preprocessing')
-            print('2. Tokenization')
-            print('3. Token Embedding')
-            print('4. Document Embedding')
-            print('5. 2018년 삼성사업계획서를 분석해서 워드클라우드를 작성하시오.')
-            print('6. remove_stopword')
-            print('9. nltk download')
+            print('1. nltk 다운로드')
+            print('2. 전처리')
+            print('3. 워드클라우드')
             return input('메뉴 선택 \n')
 
         while 1:
@@ -62,21 +59,14 @@ class Solution(Reader):
             if menu == '0':
                 break
             elif menu == '1':
-                self.preprocessing()
-            elif menu == '2':
-                self.tokenization()
-            elif menu == '3':
-                self.token_embedding()
-            elif menu == '4':
-                self.document_embedding()
-            elif menu == '5':
-                self.draw_wordcloud()
-            elif menu == '6':
-                self.remove_stopword()
-            elif menu == '9':
                 Solution.download()
+            elif menu == '2':
+                _ = self.preprocessing()
+                ic(_)
+            elif menu == '3':
+                self.draw_wordcloud()
 
-    @staticmethod  # 클래스와 상관 없이 미리 존재함
+    @staticmethod
     def download():
         nltk.download('punkt')
 
@@ -91,51 +81,38 @@ class Solution(Reader):
         tokenizer = re.compile(r'[^ㄱ-힣]+')
         return tokenizer.sub(' ', texts)
 
-    def tokenization(self):
-        noun_tokens = []
+    def noun_embedding(self):
+        nouns = []
         tokens = word_tokenize(self.preprocessing())
-        # ic(tokens[:100])
         for i in tokens:
             pos = self.okt.pos(i)
             _ = [j[0] for j in pos if j[1] == 'Noun']
             if len(''.join(_)) > 1:
-                noun_tokens.append(' '.join(_))
-        texts = ' '.join(noun_tokens)
-        ic(texts[:100])
-        return texts
+                nouns.append(' '.join(_))
+        return nouns
 
-    def read_stopword(self):
+    def stopword_embedding(self):
         self.okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         file = self.file
         file.fname = 'stopwords.txt'
         path = self.new_file(file)
         with open(path, 'r', encoding='utf-8') as f:
-            texts = f.read()
-        ic(texts)
-        return texts
+            stopwords = f.read()
+        return stopwords.split()
 
-    def token_embedding(self) -> []:
-        tokens = self.tokenization()
-        stopwords = self.read_stopword()
-        texts = [text for text in tokens if text not in stopwords]
-        return texts
-
-    def draw_wordcloud(self):
-        _ = self.token_embedding()
-        freqtxt = pd.Series(dict(FreqDist(_))).sort_values(ascending=False)
-        ic(freqtxt)
-        wcloud = WordCloud('./data/D2Coding.ttf', relative_scaling=0.2,
-                           background_color='white').generate(" ".join(_))
-        plt.figure(figsize=(12, 12))
-        plt.imshow(wcloud, interpolation='bilinear')
-        plt.axis('off')
-        plt.show()
-
-
+    def morphemes_embedding(self) -> []:
+        nouns = self.noun_embedding()
+        ic(nouns[:10])
+        stopwords = self.stopword_embedding()
+        ic(stopwords[:10])
+        morphemes = [text for text in nouns if text not in stopwords]
+        ic(morphemes[:10])
+        return morphemes
 
     def draw_wordcloud(self):
-        _ = self.token_embedding()
+        _ = self.morphemes_embedding()
         freqtxt = pd.Series(dict(FreqDist(_))).sort_values(ascending=False)
+        ic(type(freqtxt))
         ic(freqtxt)
         wcloud = WordCloud('./data/D2Coding.ttf', relative_scaling=0.2,
                            background_color='white').generate(" ".join(_))
