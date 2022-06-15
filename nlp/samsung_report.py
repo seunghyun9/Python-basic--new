@@ -15,6 +15,7 @@ import nltk
     말뭉치(코퍼스 corpus)를 어떤 토큰의 단위로 분할하냐에 따라 
     단어 집합의 크기, 단어 집합이 표현하는 토크의 형태가 다르게 나타나며 
     이는 모델의 성능을 좌지우지하기도 한다. 
+    
     이때 텍스트를 토큰의 단위로 분할하는 작업을 토큰화라고 한다. 
     토큰의 단위는 보통 의미를 가지는 최소 의미 단위로 선정되며, 
     토큰의 단위를 단어로 잡으면 Word Tokenization이라고 하고, 
@@ -52,6 +53,7 @@ class Solution(Reader):
             print('3. Token Embedding')
             print('4. Document Embedding')
             print('5. 2018년 삼성사업계획서를 분석해서 워드클라우드를 작성하시오.')
+            print('6. remove_stopword')
             print('9. nltk download')
             return input('메뉴 선택 \n')
 
@@ -68,7 +70,9 @@ class Solution(Reader):
             elif menu == '4':
                 self.document_embedding()
             elif menu == '5':
-                self.draw_worldcloud()
+                self.draw_wordcloud()
+            elif menu == '6':
+                self.remove_stopword()
             elif menu == '9':
                 Solution.download()
 
@@ -109,20 +113,36 @@ class Solution(Reader):
             texts = f.read()
         ic(texts)
         return texts
-    def remove_stopword(self):
+
+    def token_embedding(self) -> []:
         tokens = self.tokenization()
-        stopword = self.read_stopword()
-        texts = []
-        print(texts)
+        stopwords = self.read_stopword()
+        texts = [text for text in tokens if text not in stopwords]
+        return texts
 
-    def token_embedding(self):
-        pass
+    def draw_wordcloud(self):
+        _ = self.token_embedding()
+        freqtxt = pd.Series(dict(FreqDist(_))).sort_values(ascending=False)
+        ic(freqtxt)
+        wcloud = WordCloud('./data/D2Coding.ttf', relative_scaling=0.2,
+                           background_color='white').generate(" ".join(_))
+        plt.figure(figsize=(12, 12))
+        plt.imshow(wcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.show()
 
-    def document_embedding(self):
-        pass
 
-    def draw_worldcloud(self):
-        pass
+
+    def draw_wordcloud(self):
+        _ = self.token_embedding()
+        freqtxt = pd.Series(dict(FreqDist(_))).sort_values(ascending=False)
+        ic(freqtxt)
+        wcloud = WordCloud('./data/D2Coding.ttf', relative_scaling=0.2,
+                           background_color='white').generate(" ".join(_))
+        plt.figure(figsize=(12, 12))
+        plt.imshow(wcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.show()
 
 
 if __name__ == '__main__':
