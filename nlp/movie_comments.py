@@ -3,6 +3,8 @@ import urllib.request
 import pandas as pd
 from context.domains import Reader, File
 from icecream import ic
+from matplotlib import rc, font_manager
+rc('font', family=font_manager.FontProperties(fname='C:/Windows/Fonts/malgunsl.ttf').get_name())
 
 
 '''
@@ -18,10 +20,12 @@ class Solution(Reader):
     def hook(self):
         def print_menu():
             print('0. Exit')
-            print('1. 텍스트 마이닝(크롤링)')
-            print('2. DF로 정형화')
+            print(' **** 전처리 *** ')
+            print('1. 크롤링(텍스트 마이닝)')
+            print('2. 정형화(객체)')
             print('3. 토큰화')
-            print('3. 임베딩')
+            print('4. 임베딩')
+            print(' **** 후처리 *** ')
             return input('메뉴 선택 \n')
 
         while 1:
@@ -37,11 +41,24 @@ class Solution(Reader):
 
     def preprocess(self):
         self.stereotype()
-        ic(self.movie_comments.head(5))
-        ic(self.movie_comments)
+        df = self.movie_comments
+        # ic(df.head(5))
+        # 코멘트가 없는 리뷰 데이터(NaN) 제거
+        df = df.dropna()
+        # 중복 리뷰 제거
+        df = df.drop_duplicates(['comment'])
+        # self.reviews_info(df)
+        # 긍정, 부정 리뷰 수
+        df.label.value_counts()
+        top10 = self.top10_movies(df)
+        self.visualization(top10)
+
+
 
     def crawling(self):
+
         file = self.file
+
         file.fname = 'movie_reviews.txt'
         path = self.new_file(file)
         f = open(path, 'w', encoding='UTF-8')
@@ -71,12 +88,31 @@ class Solution(Reader):
 
     def stereotype(self):
         file = self.file
+        file.context = './save/'
         file.fname = 'movie_reviews.txt'
         path = self.new_file(file)
         self.movie_comments = pd.read_csv(path, delimiter='\t',
                            names=['title', 'score', 'comment', 'label'])
 
+    def reviews_info(self, df):
+        movie_lst = df.title.unique()
+        ic('전체 영화 편수 =', len(movie_lst))
+        ic(movie_lst[:10])
+        cnt_movie = df.title.value_counts()
+        ic(cnt_movie[:20])
+        info_movie = df.groupby('title')['score'].describe()
+        ic(info_movie.sort_values(by=['count'], axis=0, ascending=False))
 
+    def top10_movies(self, df):
+        top10 = df.title.value_counts().sort_values(ascending=False)[:10]
+        top10_title = top10.index.tolist()
+        return df[df['title'].isin(top10_title)]
+
+    def get_avg_score(self.top10):
+
+
+    def visualization(self, top10):
+        pass
 
     def tokenization(self):
         pass

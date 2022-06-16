@@ -41,19 +41,8 @@ class Solution(Reader):
             elif menu == '5':
                 self.statistics()
 
-    def seoul_station_price(self):
-        driver = webdriver.Chrome('C:/Users/seunghyun/Downloads/chromedriver_win32/chromedriver.exe')
-        driver.get("http://www.opinet.co.kr/searRgSelect.do")
-        driver.get("https://www.opinet.co.kr/searRgSelect.do")  # 직접 주유소 찾기 화면으로 갈수 없도록 되어 있음
-        xpath = """//*[@id="SIDO_NM0"]"""
-        gu_list_raw = driver.find_element_by_xpath(xpath)
-        gu_list = gu_list_raw.find_elements_by_tag_name("option")
-        gu_names = [option.get_attribute("value") for option in gu_list]
-        gu_names.remove('')
-        print(gu_names)
-
     def crawling(self):
-        driver = webdriver.Chrome('C:/Users/seunghyun/Downloads/chromedriver_win32/chromedriver.exe')
+        driver = webdriver.Chrome('C:/Users/seunghyun/PycharmProjects/djangoProject/gas_station/data/chromedriver.exe')
         driver.get("http://www.opinet.co.kr/searRgSelect.do")
         driver.get("https://www.opinet.co.kr/searRgSelect.do")
         # 구 선택 id 정보 얻기
@@ -79,8 +68,8 @@ class Solution(Reader):
 
     def embedding(self):
         # 여러 개의 엑셀파일을 하나의 리스트에 담기
-        print(glob('./data2/지역*.xls'))  # '지역'으로 시작되는 모든 xls 파일명을 리스트에 담기
-        merged_list = glob('./data2/지역*.xls')  # 새로운 리스트에 저장
+        print(glob('data/지역*.xls'))  # '지역'으로 시작되는 모든 xls 파일명을 리스트에 담기
+        merged_list = glob('data/지역*.xls')  # 새로운 리스트에 저장
         list_tabel = []  # 엑셀 내용을 담을 리스트
         for file_name in merged_list:
             tmp = pd.read_excel(file_name, header=2)
@@ -113,7 +102,6 @@ class Solution(Reader):
         plt.show()
 
     def statistics(self): # 데이터 통계화
-        self.korean_font()
         gas_station = self.stereotype()
         print(gas_station.sort_values(by='경유가격', ascending=False).head(10))
         print(gas_station.sort_values(by='경유가격', ascending=True).head(10))
