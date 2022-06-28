@@ -41,6 +41,7 @@ class Solution(tf.keras.Model):
         # 모델 학습
         hist = model.fit(self.train_ds, validation_data=self.val_ds, epochs=10)
 
+
         # 모델 평가
         print('모델 평가')
         model.evaluate(self.x_test, self.y_test)
